@@ -70,19 +70,27 @@
           >
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" style="width:100%">注册</el-button>
+          <el-button type="primary" @click="register" style="width:100%"
+            >注册</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
     <div class="right">
       <img src="@/assets/img/login_bg.png" alt="" />
     </div>
+    <register ref="register"></register>
   </div>
 </template>
 
 <script>
+import { saveToken } from '@/utils/tokens.js'
+import register from './register'
 export default {
   name: 'Login',
+  components: {
+    register
+  },
   data () {
     return {
       imgUrl: `${process.env.VUE_APP_BASEURL}/captcha?type=login`,
@@ -135,6 +143,9 @@ export default {
     }
   },
   methods: {
+    register () {
+      this.$refs.register.dialogVisible = true
+    },
     changeRegImg () {
       this.imgUrl =
         `${process.env.VUE_APP_BASEURL}/captcha?type=login&aaa=` +
@@ -150,7 +161,8 @@ export default {
         })
         if (res.code !== 200) return this.$message.error(res.message)
         if (res.code === 200) this.$message.success('登陆成功')
-        localStorage.setItem('mm64Token', res.data.token)
+        // localStorage.setItem('mm64Token', res.data.token)
+        saveToken(res.data.token)
         this.$router.push('/layout')
       })
     }
