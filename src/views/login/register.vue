@@ -4,6 +4,7 @@
     title="用户注册"
     :visible.sync="dialogVisible"
     width="600px"
+    @close="handleClose"
   >
     <el-form
       :model="form"
@@ -18,6 +19,7 @@
       <el-form-item label="昵称" prop="avatar">
         <el-upload
           class="avatar-uploader"
+          ref="uploada"
           :action="postHttp"
           :data="userPicUpload"
           :show-file-list="false"
@@ -136,6 +138,16 @@ export default {
     }
   },
   methods: {
+    // 点击关闭取消的时候清空注册框的内容
+    handleClose () {
+      // console.log(this)
+      // this.$refs.uploada.clearFiles()
+      this.$refs.form.resetFields()
+      this.imageUrl = ''
+      // console.log(this.$refs.upload.clearFiles)
+      // console.log(this.$refs.form.resetFields)
+      // console.log(1111)
+    },
     changRegImg () {
       this.regImg =
         `${process.env.VUE_APP_BASEURL}/captcha?type=sendsms&t=` +

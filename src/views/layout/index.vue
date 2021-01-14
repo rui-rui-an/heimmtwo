@@ -2,7 +2,7 @@
   <el-container class="el-container">
     <el-header class="header">
       <div class="left">
-        <i class="el-icon-s-fold setheight"></i>
+        <i @click="openNav" class="el-icon-s-fold setheight"></i>
         <img src="@/assets/img/layout_icon.png" alt="" class="marginlr" />
         <span class="title">黑马面面</span>
       </div>
@@ -15,8 +15,38 @@
       </div>
     </el-header>
     <el-container>
-      <el-aside width="200px" class="aside">Aside</el-aside>
-      <el-main class="main">Main</el-main>
+      <el-aside width="auto" class="aside">
+        <el-menu
+          :default-active="$route.path"
+          class="el-menu-vertical-demo"
+          :collapse="isCollapse"
+          router
+        >
+          <el-menu-item index="/layout/chart">
+            <i class="el-icon-eleme"></i>
+            <span slot="title">数据预览</span>
+          </el-menu-item>
+          <el-menu-item index="/layout/user">
+            <i class="el-icon-user"></i>
+            <span slot="title">用户列表</span>
+          </el-menu-item>
+          <el-menu-item index="/layout/enterprise">
+            <i class="el-icon-office-building"></i>
+            <span slot="title">企业列表</span>
+          </el-menu-item>
+          <el-menu-item index="/layout/question">
+            <i class="el-icon-edit-outline"></i>
+            <span slot="title">题库列表</span>
+          </el-menu-item>
+          <el-menu-item index="/layout/subject">
+            <i class="el-icon-document"></i>
+            <span slot="title">学科列表</span>
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+      <el-main class="main">
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -27,7 +57,8 @@ export default {
   data () {
     return {
       userPic: '',
-      userInfo: ''
+      userInfo: '',
+      isCollapse: true
     }
   },
   methods: {
@@ -54,6 +85,9 @@ export default {
         .catch(() => {
           this.$message.success('已取消退出')
         })
+    },
+    openNav () {
+      this.isCollapse = !this.isCollapse
     }
   },
   created () {
@@ -105,6 +139,10 @@ export default {
   }
   .aside {
     height: 100%;
+    .el-menu-vertical-demo:not(.el-menu--collapse) {
+      width: 200px;
+      min-height: 400px;
+    }
   }
   .main {
     height: 100%;
