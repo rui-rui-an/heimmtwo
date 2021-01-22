@@ -53,7 +53,7 @@
         </el-table-column>
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
-            <el-button>
+            <el-button @click="edit(scope.row)">
               编辑
             </el-button>
             <el-button
@@ -80,12 +80,17 @@
       >
       </el-pagination>
     </el-card>
+    <add-or-edit ref="addOrEdit"></add-or-edit>
   </div>
 </template>
 
 <script>
+import addOrEdit from './addOrEdit'
 export default {
   name: 'User',
+  components: {
+    addOrEdit
+  },
   data () {
     return {
       formInline: {
@@ -111,7 +116,28 @@ export default {
       this.$refs.form.resetFields()
       this.getUserInfo()
     },
-    add () {},
+    // 新增用户
+    add () {
+      this.$refs.addOrEdit.dialogVisible = true
+      this.$refs.addOrEdit.mode = 'add'
+      // 记得在开始就给form赋值，否则会给后端带过去很多不需要的数据，就有可能导致了错误
+      this.$refs.addOrEdit.ruleForm = {
+        username: '',
+        email: '',
+        phone: '',
+        role_id: '',
+        status: '',
+        remark: ''
+      }
+    },
+    // 编辑用户
+    edit (row) {
+      this.$refs.addOrEdit.dialogVisible = true
+      this.$nextTick(() => {
+        this.$refs.addOrEdit.ruleForm = JSON.parse(JSON.stringify(row))
+      })
+      this.$refs.addOrEdit.mode = 'edit'
+    },
     // 一进入页面获取列表信息
     async getUserInfo () {
       const res = await this.$axios.get('/user/list', {

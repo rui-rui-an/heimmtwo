@@ -4,7 +4,7 @@ import { getToken, removeToken } from './tokens'
 import { Message } from 'element-ui'
 import router from '@/router'
 
-axios.defaults.baseURL = 'http://127.0.0.1/heimamm/public'
+axios.defaults.baseURL = process.env.VUE_APP_BASEURL
 
 // 让axios请求携带cookies解决跨域问题
 axios.defaults.withCredentials = true

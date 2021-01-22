@@ -22,7 +22,7 @@
           :collapse="isCollapse"
           router
         >
-          <el-menu-item index="/layout/chart">
+          <!-- <el-menu-item index="/layout/chart">
             <i class="el-icon-eleme"></i>
             <span slot="title">数据预览</span>
           </el-menu-item>
@@ -41,6 +41,15 @@
           <el-menu-item index="/layout/subject">
             <i class="el-icon-document"></i>
             <span slot="title">学科列表</span>
+          </el-menu-item> -->
+          <el-menu-item
+            v-for="(item, index) in $router.options.routes[3].children"
+            :key="index"
+            :index="item.meta.path"
+            v-show="item.meta.rights.includes(userInfo.role)"
+          >
+            <i :class="item.meta.icon"></i>
+            <span slot="title">{{ item.meta.title }}</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
@@ -61,6 +70,15 @@ export default {
       isCollapse: true
     }
   },
+  watch: {
+    $route (val) {
+      // console.log(a)
+      if (!val.meta.rights.includes(this.userInfo.role)) {
+        this.$message.error('您无权限访问此页面')
+        this.$router.push('/')
+      }
+    }
+  },
   methods: {
     async getuserInfo () {
       const res = await this.$axios.get('/info')
@@ -68,6 +86,8 @@ export default {
       if (res.code === 200) {
         this.userPic = process.env.VUE_APP_BASEURL + '/' + res.data.avatar
         this.userInfo = res.data
+        this.$store.commit('setUserInfo', res.data)
+        // console.log(this.userInfo)
       }
     },
     async loginOut () {
@@ -92,6 +112,7 @@ export default {
   },
   created () {
     this.getuserInfo()
+    // console.log(this.$router.options.routes[3].children)
   }
 }
 </script>
